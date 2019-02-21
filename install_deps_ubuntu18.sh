@@ -3,7 +3,7 @@ sudo add-apt repository ppa:jonathonf/python-3.6
 sudo apt update
 sudo apt install git
 sudo apt install python3.6
-sudo apt install python-pip
+sudo apt install python3-pip
 sudo apt-get install mysql-server
 
 # Install chrome
