@@ -11,7 +11,7 @@ services:
       context: ./demain-brain/
       dockerfile: ./Dockerfile.development
     volumes:
-      - ./backend:/usr/src/app
+      - ./demain-brain:/usr/src/app
       - /usr/src/app/node_modules
     ports:
       - '5000:5000'
@@ -23,7 +23,7 @@ services:
       context: ./demain-ideas-web/
       dockerfile: ./Dockerfile.development
     volumes:
-      - ./frontend:/usr/src/app
+      - ./demain-ideas-web:/usr/src/app
       - /usr/src/app/node_modules
     ports:
       - '3000:3000'
