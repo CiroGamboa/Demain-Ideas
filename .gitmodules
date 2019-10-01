@@ -1,0 +1,6 @@
+[submodule "demain-brain"]
+	path = demain-brain
+	url = https://github.com/MGsus/demain-brain.git
+[submodule "demain-ideas-web"]
+	path = demain-ideas-web
+	url = https://github.com/MGsus/demain-ideas-web.git
