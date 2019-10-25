@@ -19,6 +19,8 @@ tags:
   description: Access to Demain projects
 - name: Categories
   description: Operations about categories
+- name: GitHub
+  description: GitHub Api from https://developer.github.com/v3/
 paths:
   /auth/logInGithub:
     post:
