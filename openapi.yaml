@@ -1,0 +1,412 @@
+openapi: 3.0.1
+info:
+  title: Swagger Demain Backend
+  contact:
+    email: demain@gmail.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+tags:
+- name: Auth
+  description: Everything about Auth and login with github
+- name: Users
+  description: Acess to users data
+- name: Projects
+  description: Access to Demain projects
+- name: Categories
+  description: Operations about categories
+servers:
+  - url: https://demain-brain.herokuapp.com/api
+  - url: https://demain-backend-replica.herokuapp.com/api
+paths:
+  /auth/logInGithub:
+    post:
+      tags:
+      - Auth
+      summary: LogIn with github
+      description: If its the first login, saves your profile info from github
+      operationId: loginGithub
+      requestBody:
+        description: Created user object
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/GithubCredentials'
+        required: true
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Token'
+        400:
+          description: Invalid username or password value
+          content: {}
+      security:
+      - demain_auth:
+        - write:users
+        - read:users
+  /projects:
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+      - Projects
+      summary: Create project
+      description: This can only be done by the logged in user.
+      operationId: createProject
+      requestBody:
+        description: Created user object
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/Project'
+        required: true
+      responses:
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        default:
+          description: successful operation
+          content: {}
+      x-codegen-request-body-name: body
+  /projects/all:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+      - Projects
+      summary: Get project list
+      operationId: getProjects
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Project'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        404:
+          description: Projects not found
+          content: {}
+  /projects/{id}:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+      - Projects
+      summary: Get project by project id
+      operationId: getProjectById
+      parameters:
+      - name: id
+        in: path
+        description: 'The id that needs to be fetched. '
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+        400:
+          description: Invalid id supplied
+          content: {}
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        404:
+          description: Project not found
+          content: {}
+    put:
+      security:
+        - bearerAuth: []
+      tags:
+      - Projects
+      summary: Update project
+      description: This can only be done by the logged in user.
+      operationId: updateProject
+      parameters:
+      - name: id
+        in: path
+        description: 'The id that needs to be updated. '
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Updated user object
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/Project'
+        required: true
+      responses:
+        400:
+          description: Invalid user supplied
+          content: {}
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        404:
+          description: User not found
+          content: {}
+      x-codegen-request-body-name: body 
+    delete:
+      security:
+        - bearerAuth: []
+      tags:
+      - Projects
+      summary: Delete project
+      description: This can only be done by the logged in user.
+      operationId: deleteProject
+      parameters:
+      - name: id
+        in: path
+        description: 'The id that needs to be updated. '
+        required: true
+        schema:
+          type: string
+      responses:
+        400:
+          description: Invalid user supplied
+          content: {}
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        404:
+          description: User not found
+          content: {}
+  /categories/all:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+      - Categories
+      summary: Get category list
+      operationId: getCategories
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Category'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        404:
+          description: User not found
+          content: {}
+  /users:
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+      - Users
+      summary: Create user
+      description: This can only be done by the logged in user.
+      operationId: createUser
+      requestBody:
+        description: Created user object
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      responses:
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        default:
+          description: successful operation
+          content: {}
+      x-codegen-request-body-name: body
+    put:
+      security:
+        - bearerAuth: []
+      tags:
+      - Users
+      summary: Update user by token
+      description: The logged in user can update own information.
+      operationId: updateUser
+      requestBody:
+        description: Updated user object
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      responses:
+        400:
+          description: Invalid user supplied
+          content: {}
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        404:
+          description: User not found
+          content: {}
+      x-codegen-request-body-name: body
+    delete:
+      security:
+        - bearerAuth: []
+      tags:
+      - Users
+      summary: Delete user by token
+      description: The logged in user deletes its account.
+      operationId: deleteUser
+      responses:
+        400:
+          description: Invalid user supplied
+          content: {}
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        404:
+          description: User not found
+          content: {}
+  /users/me:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+      - Users
+      summary: Get user info by token
+      operationId: getUserMe
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        404:
+          description: User not found
+          content: {}
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+          
+  /users/{id}:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+      - Users
+      summary: Get user by user id
+      operationId: getUserById
+      parameters:
+      - name: id
+        in: path
+        description: 'The id that needs to be fetched. '
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        400:
+          description: Invalid id supplied
+          content: {}
+        404:
+          description: User not found
+          content: {}
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+components:
+  schemas:
+    Category:
+      type: object
+      properties:
+        name:
+          type: string
+    STG:
+      type: object
+      properties:
+        name:
+          type: string
+    Token:
+      type: string
+    GithubCredentials:
+      type: object
+      properties:
+        username:
+          type: string
+          description: Github Username or email 
+        password:
+          type: string
+    User:
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        bio:
+          type: string
+        birth_date:
+          type: string
+          format: date-time
+        location:
+          type: string
+        profile_pic:
+          type: string
+        github_username:
+          type: string
+        github_token:
+          type: string
+        google_id:
+          type: string
+        leaves:
+          type: integer
+          description: Cash tokens
+          format: int32
+        categories:
+          type: array
+          items: 
+            $ref: '#/components/schemas/Category'
+        stgs:
+          type: array
+          items: 
+            $ref: '#/components/schemas/STG'
+    Project:
+      type: object
+      properties:
+        author:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        likes:
+          type: number
+        location:
+          type: string
+        repo:
+          type: string
+        picture:
+          type: string
+        video:
+          type: string
+        categories:
+          type: array
+          items:
+            $ref: '#/components/schemas/Category'
+        stgs:
+          type: array
+          items: 
+            $ref: '#/components/schemas/STG'
+  responses:
+    UnauthorizedError:
+      description: Access token is missing or invalid
+  securitySchemes:
+    bearerAuth:            # arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+security:
+  - bearerAuth: []
+
