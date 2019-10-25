@@ -1,12 +1,15 @@
 openapi: 3.0.1
 info:
-  title: Swagger Demain Backend
+  title: Demain Brain API
   contact:
     email: demain@gmail.com
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   version: 1.0.0
+servers:
+  - url: https://demain-brain.herokuapp.com/api
+  - url: https://demain-backend-replica.herokuapp.com/api
 tags:
 - name: Auth
   description: Everything about Auth and login with github
@@ -16,9 +19,6 @@ tags:
   description: Access to Demain projects
 - name: Categories
   description: Operations about categories
-servers:
-  - url: https://demain-brain.herokuapp.com/api
-  - url: https://demain-backend-replica.herokuapp.com/api
 paths:
   /auth/logInGithub:
     post:
